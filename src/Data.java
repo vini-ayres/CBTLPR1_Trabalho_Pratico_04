@@ -16,50 +16,37 @@ public class Data {
     }
 
     public Data(int dia, int mes, int ano) {
-        this.dia = dia;
-        this.mes = mes;
-        this.ano = ano;
+        if (dia >= 1 && dia <= 31 && mes >= 1 && mes <= 12 && ano > 0) {
+            this.dia = dia;
+            this.mes = mes;
+            this.ano = ano;
+        } else {
+            throw new IllegalArgumentException("Data inválida");
+        }
     }
 
     public void entraDia(int dia) {
-        if (this.mes % 2 == 1 || this.mes >= 8 && this.mes % 2 == 0) {
-            if (this.dia == 31) {
-                this.dia = 1;
-                if (this.mes == 12) {
-                    this.mes = 1;
-                    this.ano++;
-                } else {
-                    this.mes++;
-                }
-            } else {
-                this.dia += dia;
-            }
+        if (dia >= 1 && dia <= 31) {
+            this.dia = dia;
         } else {
-            if (this.dia == 30) {
-                this.dia = 1;
-                if (this.mes == 12) {
-                    this.mes = 1;
-                    this.ano++;
-                } else {
-                    this.mes++;
-                }
-            } else {
-                this.dia = dia;
-            }
+            throw new IllegalArgumentException("Dia inválido");
         }
     }
 
     public void entraMes(int mes) {
-        if (this.mes == 12) {
-            this.mes = 1;
-            this.ano++;
-        } else {
+        if (mes >= 1 && mes <= 12) {
             this.mes = mes;
+        } else {
+            throw new IllegalArgumentException("Mês inválido");
         }
     }
 
     public void entraAno(int ano) {
-        this.ano = ano;
+        if (ano > 0) {
+            this.ano = ano;
+        } else {
+            throw new IllegalArgumentException("Ano inválido");
+        }
     }
 
     public void entraDia() {
@@ -67,11 +54,11 @@ public class Data {
             try {
                 System.out.print("Digite um valor para o dia: ");
                 int dia = sc.nextInt();
-                if (dia < 1 || dia > 31) {
-                    System.out.println("Erro. Valor inválido. Digite um valor entre 1 e 31.");
-                } else {
-                    entraDia(dia);
+                if (dia >= 1 && dia <= 31) {
+                    this.dia = dia;
                     break;
+                } else {
+                    System.out.println("Erro. Valor inválido para o dia.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Erro. Valor inválido. Digite um número inteiro.");
@@ -85,11 +72,11 @@ public class Data {
             try {
                 System.out.print("Digite um valor para o mês: ");
                 int mes = sc.nextInt();
-                if (mes < 1 || mes > 12) {
-                    System.out.println("Erro. Valor inválido. Digite um valor entre 1 e 12.");
-                } else {
-                    entraMes(mes);
+                if (mes >= 1 && mes <= 12) {
+                    this.mes = mes;
                     break;
+                } else {
+                    System.out.println("Erro. Valor inválido para o mês.");
                 }
             } catch (InputMismatchException e) {
                 System.out.println("Erro. Valor inválido. Digite um número inteiro.");
@@ -103,8 +90,12 @@ public class Data {
             try {
                 System.out.print("Digite um valor para o ano: ");
                 int ano = sc.nextInt();
-                entraAno(ano);
-                break;
+                if (ano > 0) {
+                    this.ano = ano;
+                    break;
+                } else {
+                    System.out.println("Erro. Valor inválido para o ano.");
+                }
             } catch (InputMismatchException e) {
                 System.out.println("Erro. Valor inválido. Digite um número inteiro.");
                 sc.next();
@@ -125,38 +116,16 @@ public class Data {
     }
 
     public String mostra1() {
-        String str = "";
-        if (this.dia < 10) {
-            str += "0" + this.dia + "/";
-            if (this.mes < 10) {
-                str += "0" + this.mes + "/" + this.ano;
-            } else {
-                str += this.mes + "/" + this.ano;
-            }
-        } else {
-            str += this.dia + "/";
-            if (this.mes < 10) {
-                str += "0" + this.mes + "/" + this.ano;
-            } else {
-                str += this.mes + "/" + this.ano;
-            }
-        }
-        return str;
+        return String.format("%02d/%02d/%d", this.dia, this.mes, this.ano);
     }
 
     public String mostra2() {
         String[] meses = {
-            "janeiro", "fevereiro", "marco", "abril", 
+            "janeiro", "fevereiro", "março", "abril", 
             "maio", "junho", "julho", "agosto",
             "setembro", "outubro", "novembro", "dezembro"
         };
-        String str = "";
-        if (this.dia < 10) {
-            str += "0" + this.dia + "/" + meses[this.mes - 1] + "/" + this.ano;
-        } else {
-            str += this.dia + "/" + meses[this.mes - 1] + "/" + this.ano;
-        }
-        return str;
+        return String.format("%02d/%s/%d", this.dia, meses[this.mes - 1], this.ano);
     }
 
     public boolean bissexto() {
@@ -170,11 +139,7 @@ public class Data {
         int totalDias = 0;
 
         for (int i = 0; i < this.mes - 1; i++) {
-            if (bissexto()) {
-                totalDias += diasPorMesBissexto[i];
-            } else {
-                totalDias += diasPorMesComum[i];
-            }
+            totalDias += bissexto() ? diasPorMesBissexto[i] : diasPorMesComum[i];
         }
 
         totalDias += this.dia;
