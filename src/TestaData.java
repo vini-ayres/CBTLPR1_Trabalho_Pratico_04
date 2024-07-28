@@ -1,7 +1,7 @@
 public class TestaData {
     public static void main(String[] args) {
         Data d1 = new Data(10, 7, 2024);
-
+          
         System.out.println("Data: " + d1.mostra1());
         System.out.println("Data por extenso: " + d1.mostra2());
 
